@@ -1,4 +1,4 @@
-
+Use Tureng dictionary inside emacs.
 
 * Functions
   + tureng (word lang other-terms): Search the word and return the results as an array.
