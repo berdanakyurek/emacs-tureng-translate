@@ -1,0 +1,47 @@
+
+
+* Functions
+  + tureng (word lang other-terms): Search the word and return the results as an array.
+    + word: word to translate as a string.
+    + lang: language to translate as a string.
+    + other-terms: bool to get definitions or other terms.
+      + nil: definition of term.
+      + t: relevant terms mode.
+  + show-tureng-in-org-table (word arr mode): Display the results in an org table. Use 'q' to kill
+    tureng translate buffer and 'm' to toggle between word mode and phrase mode.
+    + word: word to translate as a string.
+    + arr: result of tureng function.
+    + mode: word or phrase mode.
+      + nil: Word mode.
+      + t: Phrase mode.
+
+  + tureng-translate-region (arg): Translate marked region and show in org table.
+    + arg: word or phrase mode.
+      + nil: Word mode.
+      + t: Phrase mode.
+  + tureng-translate-word-around-point (arg): Translate the word around the cursor and show in org
+    table.
+    + arg: word or phrase mode.
+      + nil: Word mode.
+      + t: Phrase mode.
+
+  + tureng-translate (): Interactive function to translate region or word around point. If a region
+    is marked, the region; otherwise the word around the cursor is translated and displayed in an
+    org table.
+
+  + tureng-translate-not-interactive (word arg): Non-interactive version of tureng-translate.
+    + word: word to translate as a string.
+    + arg: word or phrase mode.
+      + nil: Word mode.
+      + t: Phrase mode.
+
+  + tureng-translate-pdf (): PDF-view compatible version of tureng-translate.
+
+  + tureng-trans-change-mode (): Update current display window containing org table with the other
+    mode content.
+
+* Display Buffer
+  When a translation is invoked, it is displayed in a new org buffer. This buffer is a read-only org
+  buffer containing an org table with translation data except following two bindings:
+  + q: Kill window.
+  + m: Update buffer with other mode content.
