@@ -2,6 +2,12 @@
   (while (re-search-forward "&#\\([0-9]+\\);" nil t)
     (replace-match (format "%c" (string-to-number (match-string 1))))))
 
+(define-derived-mode tureng-view-mode
+  org-mode "Tureng View Mode"
+  "Major mode for displaying tureng search results"
+  (local-set-key (kbd "q") 'delete-window)
+  (local-set-key (kbd "m") 'tureng-trans-change-mode))
+
 (defun tureng (word lang other-terms)
   "finds the definitions of the world in tureng with lang language"
   (let ((url (concat "https://tureng.com/en/" lang "/" word)))
@@ -12,7 +18,7 @@
       (search-forward "<table")
 
       (if other-terms
-          (search-forward "<table"))
+          (a-forward "<table"))
       (end-of-line)
       (let ((start-index (point)))
         (search-forward "</table>")
@@ -45,30 +51,16 @@
 (defun tureng-trans-change-mode ()
   "Toggles between phrase mode and word mode"
   (interactive)
-  (toggle-read-only)
   (beginning-of-buffer)
-  (kill-line)
-  (delete-region (point-min) (point-max))
-  (yank)
-  (beginning-of-buffer)
-  (search-forward " ")
-  (delete-char -2)
-  (search-forward " ")
-  (search-forward " ")
-  (delete-char -7)
-  (insert "\n")
-  (end-of-buffer)
-  (let ((word "")
-        (end (point))
-        (arg t))
-    (beginning-of-line)
-    (setq word (buffer-substring (point) end))
-    (kill-line)
-    (delete-char -1)
-    (message (buffer-substring (point-min) (point-max)))
-    (if (equal (buffer-substring (point-min) (point-max)) "Word")
-        (tureng-translate-not-interactive word t)
-      (tureng-translate-not-interactive word nil))))
+  (search-forward ": ")
+  (let ((current-word-dd (word-at-point)))
+    (beginning-of-buffer)
+    (search-forward " ")
+    (forward-char)
+    (message (word-at-point))
+    (if (string= (current-word) "Word")
+        (tureng-translate-not-interactive current-word-dd t)
+      (tureng-translate-not-interactive current-word-dd nil))))
 
 (defun show-tureng-in-org-table (word arr mode)
   "show arr in minibuffer where arr is the result of tureng function"
@@ -76,7 +68,7 @@
       (kill-buffer "tureng-trans"))
   (get-buffer-create "tureng-trans")
   (set-buffer "tureng-trans")
-  (org-mode)
+  (tureng-view-mode)
   (if (eq mode t)
       (insert "* Phrase Mode: ")
     (insert "* Word Mode: "))
@@ -102,9 +94,7 @@
   (beginning-of-buffer)
 
   (pop-to-buffer "tureng-trans")
-  (toggle-read-only)
-  (local-set-key (kbd "q") 'kill-this-buffer)
-  (local-set-key (kbd "m") 'tureng-trans-change-mode))
+  (toggle-read-only))
 
 (defun tureng-translate-region (arg)
   "Translate the word in the selected region."
