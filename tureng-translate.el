@@ -27,7 +27,7 @@
 (defun tureng (word lang other-terms)
   "finds the definitions of the world in tureng with lang language"
   (let ((url (concat "https://tureng.com/en/" lang "/" word)))
-    (let ((content-buffer (url-retrieve-synchronously url) ))
+    (let ((content-buffer (url-retrieve-synchronously url t) ))
       (switch-to-buffer content-buffer)
       ;;(convert-codepoint-to-char)
       (goto-char 1)
@@ -144,11 +144,13 @@
   (tureng-translate-not-interactive (car (pdf-view-active-region-text)) nil))
 
 ;; TESTS
-(tureng "kar" "turkish-english" nil)
-(tureng "kar" "turkish-english" t)
-(tureng "özür" "turkish-english" nil)
-(tureng "ring" "turkish-english" nil)
-(tureng "cep telefonu" "turkish-english" nil)
-(show-tureng-in-org-table "kar topu" (tureng "kar topu" "turkish-english" nil))
+;; (tureng "kar" "turkish-english" nil)
+;; (tureng "kar" "turkish-english" t)
+;; (tureng "özür" "turkish-english" nil)
+;; (tureng "ring" "turkish-english" nil)
+;; (tureng "cep telefonu" "turkish-english" nil)
+;; (show-tureng-in-org-table "kar topu" (tureng "kar topu" "turkish-english" nil))
 
-(tureng-translate-not-interactive "ekmek" nil)
+;; (tureng-translate-not-interactive "ekmek" nil)
+
+(provide 'tureng-translate)
