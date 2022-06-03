@@ -132,6 +132,7 @@
         (table (tureng (current-word) "turkish-english" arg)))
     (show-tureng-in-org-table word table arg)))
 
+;;;###autoload
 (defun tureng-translate ()
   "Translates the region, if any region is selected and translates
 current-word otherwise"
