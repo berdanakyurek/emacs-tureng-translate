@@ -1,3 +1,19 @@
+;;; tureng-translate.el --- Tureng inside emacs
+
+;; Copyright (C) 2011 Free Software Foundation, Inc.
+
+
+;; Author: Berdan Akyurek <berdanakyurek17@gmail.com>
+;; Version: 1.0
+;; Package-Requires:
+;; Keywords: tureng, translate, turkish, english
+;; URL: https://github.com/berdanakyurekk/emacs-tureng-translate
+
+;;; Commentary:
+
+;; This package translates a word from English to Turkish
+;; or from Turkish to English
+
 (defun convert-codepoint-to-char ()
   (while (re-search-forward "&#\\([0-9]+\\);" nil t)
     (replace-match (format "%c" (string-to-number (match-string 1))))))
@@ -18,13 +34,12 @@
       (search-forward "<table")
 
       (if other-terms
-          (a-forward "<table"))
+          (search-forward "<table"))
       (end-of-line)
       (let ((start-index (point)))
         (search-forward "</table>")
         (beginning-of-line)
-        (narrow-to-region start-index (point))
-        )
+        (narrow-to-region start-index (point)))
       (goto-char (point-min))
       (point)
       ;;(search-forward "<tr>" (point-max) t)
