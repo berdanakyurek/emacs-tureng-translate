@@ -13,6 +13,9 @@
 
 ;; This package translates a word from English to Turkish
 ;; or from Turkish to English
+(require 'org)
+(require 'thingatpt)
+(require 'pdf-view)
 
 (defun convert-codepoint-to-char ()
   (while (re-search-forward "&#\\([0-9]+\\);" nil t)
@@ -26,6 +29,8 @@
 
 (defun tureng (word lang other-terms)
   "finds the definitions of the world in tureng with lang language"
+  (defvar tureng-translation)
+  (defvar tureng-arr-item)
   (let ((url (concat "https://tureng.com/en/" lang "/" word)))
     (let ((content-buffer (url-retrieve-synchronously url t) ))
       (switch-to-buffer content-buffer)
@@ -66,19 +71,20 @@
 (defun tureng-trans-change-mode ()
   "Toggles between phrase mode and word mode"
   (interactive)
-  (beginning-of-buffer)
+  (goto-char (point-min))
   (search-forward ": ")
   (let ((current-word-dd (word-at-point)))
-    (beginning-of-buffer)
+    (goto-char (point-min))
+
     (search-forward " ")
     (forward-char)
-    (message (word-at-point))
+    ;;(message (word-at-point))
     (if (string= (current-word) "Word")
         (tureng-translate-not-interactive current-word-dd t)
       (tureng-translate-not-interactive current-word-dd nil))))
 
 (defun show-tureng-in-org-table (word arr mode)
-  "show arr in minibuffer where arr is the result of tureng function"
+  "show arr in buffer where arr is the result of tureng function"
   (if (get-buffer "tureng-trans")
       (kill-buffer "tureng-trans"))
   (get-buffer-create "tureng-trans")
@@ -90,7 +96,7 @@
   (insert word)
   (org-return)
   (org-cycle)
-  (concat "'" word "' translation")
+  ;; (concat "'" word "' translation")
   (dotimes (i (length arr))
     (dotimes (j 3)
       (insert "|")
@@ -99,17 +105,17 @@
     (org-return)
     (if (equal i 0)
         (insert "|-\n")))
-  (delete-backward-char 1)
-  (beginning-of-buffer)
+  (delete-char -1)
+  (goto-char (point-min))
   (convert-codepoint-to-char)
-  (end-of-buffer)
+  (goto-char (point-max))
   (org-cycle)
   (org-beginning-of-line)
   (org-kill-line)
-  (beginning-of-buffer)
+  (goto-char (point-min))
 
   (pop-to-buffer "tureng-trans")
-  (toggle-read-only))
+  (read-only-mode))
 
 (defun tureng-translate-region (arg)
   "Translate the word in the selected region."
@@ -127,7 +133,8 @@
     (show-tureng-in-org-table word table arg)))
 
 (defun tureng-translate ()
-  "Translates the region, if any region is selected and translates current-word otherwise"
+  "Translates the region, if any region is selected and translates
+current-word otherwise"
   (interactive)
   (if (use-region-p)
       (tureng-translate-region nil)
@@ -137,6 +144,7 @@
   "Translates word not interactively"
   (let ((table (tureng word "turkish-english" arg)))
     (show-tureng-in-org-table word table arg)))
+
 
 (defun tureng-translate-pdf ()
   "Translate the region from PDFs"
