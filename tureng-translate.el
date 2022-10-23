@@ -27,9 +27,6 @@
   (local-set-key (kbd "q") 'delete-window)
   (local-set-key (kbd "m") 'tureng-trans-change-mode))
 
-
-
-(tureng "word" "turkish-english" nil)
 (defun tureng (word lang other-terms)
   "finds the definitions of the world in tureng with lang language"
   (defvar tureng-translation)
