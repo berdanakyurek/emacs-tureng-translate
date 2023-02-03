@@ -5,7 +5,7 @@
 
 ;; Author: Berdan Akyurek <berdanakyurek17@gmail.com>
 ;; Version: 1.0
-;; Package-Requires: org-fragtog
+;; Package-Requires: 
 ;; Keywords: tureng, translate, turkish, english
 ;; URL: https://github.com/berdanakyurekk/emacs-tureng-translate
 
